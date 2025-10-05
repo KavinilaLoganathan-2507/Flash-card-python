@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .timer {
+            font-size: 20px;
+            font-weight: bold;
+            color: #007BFF;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>Hello, {{ nickname }} 👋</h2>
+    <h3>Score: {{ score }}</h3>
+
+    <div class="progress-container">
+        <div class="progress-bar" style="width: {{ (current_index + 1) * 10 }}%;">
+            {{ current_index + 1 }}/10
+        </div>
+    </div>
+
+    <div class="timer" id="timer">Time Left: 7s</div>
+
+    <h2>Question {{ current_index + 1 }}:</h2>
+    <p>{{ card['question'] }}</p>
+
+    <form id="quizForm" action="{{ url_for('answer') }}" method="POST">
+        <input type="hidden" name="question" value="{{ card['question'] }}">
+        <input type="hidden" name="correct" value="{{ card['answer'] }}">
+
+        {% for option in card['options'] %}
+            <label>
+                <input type="radio" name="option" value="{{ option }}">
+                {{ option }}
+            </label>
+        {% endfor %}
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+let timeLeft = 7;
+const timerDisplay = document.getElementById("timer");
+const form = document.getElementById("quizForm");
+
+const countdown = setInterval(() => {
+    if(timeLeft <= 0){
+        clearInterval(countdown);
+        // Automatically select nothing and submit if no option selected
+        const selected = document.querySelector('input[name="option"]:checked');
+        if(!selected){
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "option";
+            input.value = "";
+            form.appendChild(input);
+        }
+        form.submit();
+    } else {
+        timerDisplay.textContent = "Time Left: " + timeLeft + "s";
+    }
+    timeLeft--;
+}, 1000);
+</script>
+</body>
+</html>

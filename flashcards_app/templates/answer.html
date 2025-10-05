@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Answer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="card">
+    <h2>{{ nickname }}'s Quiz</h2>
+    <h3>Score: {{ score }}</h3>
+
+    {% if is_correct %}
+        <h2 class="correct">✅ Correct!</h2>
+        <p>Your Answer: {{ selected }}</p>
+    {% else %}
+        <h2 class="wrong">❌ Wrong!</h2>
+        <p>Your Answer: {{ selected }}</p>
+        <p class="correct">✔ Correct Answer: {{ correct }}</p>
+    {% endif %}
+
+    <div class="progress-container">
+        <div class="progress-bar" style="width: {{ session['current_index'] * 10 }}%;">
+            {{ session['current_index'] }}/10
+        </div>
+    </div>
+
+    <a href="{{ url_for('index') }}"><button>Next Question</button></a>
+</div>
+</body>
+</html>
